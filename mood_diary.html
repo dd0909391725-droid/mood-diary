@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Diary｜每一種心情，都值得被記錄</title>
+<style>
+:root{--bg:#f7f5f0;--paper:#fffefa;--ink:#383632;--muted:#898178;--line:#e9e3da;--accent:#8b8178;--soft:#eee8df;--rose:#d9bdb6;--shadow:0 12px 35px rgba(70,58,45,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.shell{max-width:1120px;margin:auto;padding:28px 26px 60px}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 24px;border-bottom:1px solid var(--line);gap:20px}
+.brand{font-family:Georgia,serif;font-size:25px;letter-spacing:2px}.brand small{display:block;font:10px sans-serif;letter-spacing:2.5px;color:var(--muted);margin-top:2px}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav button,.ghost{border:0;background:transparent;color:var(--muted);padding:9px 13px;border-radius:20px;font-size:13px}nav button.active,nav button:hover{background:var(--soft);color:var(--ink)}
+main{padding-top:34px}.eyebrow{font-size:11px;letter-spacing:2.4px;color:var(--muted);text-transform:uppercase}
+h1{font-family:Georgia,"Noto Serif TC",serif;font-size:clamp(38px,6vw,62px);font-weight:400;line-height:1.12;margin:10px 0}
+.subtitle{color:var(--muted);margin:0 0 28px}.date-line{font-size:13px;color:var(--muted);margin-bottom:8px}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.card h2{font-family:Georgia,"Noto Serif TC",serif;font-size:23px;font-weight:400;margin:0 0 5px}.hint{font-size:12px;color:var(--muted);margin:0 0 20px}
+.moods{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.mood{border:1px solid var(--line);background:#fffefa;border-radius:13px;padding:12px 4px;color:var(--muted);transition:.2s}.mood span{display:block;font-size:25px}.mood b{font-size:11px;font-weight:500}.mood.selected{border-color:var(--accent);background:#f1ece5;color:var(--ink);transform:translateY(-2px)}
+label{display:block;font-size:12px;color:var(--muted);margin:18px 0 7px}textarea,input[type=text],input[type=date],select{width:100%;border:1px solid var(--line);background:#fffefa;border-radius:11px;padding:12px;color:var(--ink);outline:none}textarea{min-height:125px;resize:vertical}textarea:focus,input:focus,select:focus{border-color:#b7a99b}
+.range-row{display:flex;align-items:center;gap:14px}.range-row input{flex:1;accent-color:var(--accent)}.range-value{font-size:13px;color:var(--accent);min-width:45px}
+.primary{border:0;border-radius:24px;background:var(--accent);color:white;padding:11px 22px;font-size:13px}.primary:hover{background:#71675f}.actions{display:flex;gap:10px;align-items:center;margin-top:18px}.secondary{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:22px;padding:10px 17px;font-size:13px}
+.quote{background:#eee8df;border-radius:18px;padding:24px;height:100%;display:flex;flex-direction:column;justify-content:space-between;min-height:230px}.quote blockquote{font:italic 24px/1.45 Georgia,serif;margin:18px 0}.quote p{font-size:12px;color:var(--muted);margin:0}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:34px 0 14px}.section-title h2{font:26px Georgia,serif;margin:0}.section-title p{font-size:12px;color:var(--muted);margin:0}
+.entry-list{display:grid;gap:10px}.entry{display:flex;align-items:center;gap:14px;padding:15px 17px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}.entry-emoji{font-size:25px}.entry-body{flex:1;min-width:0}.entry-body strong{font-size:13px;font-weight:600}.entry-body p{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0 0}.entry-date{font-size:11px;color:var(--muted)}.entry-actions button{border:0;background:none;color:var(--muted);font-size:12px;padding:5px}
+.page{display:none}.page.active{display:block}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:18px}.stat small{color:var(--muted);font-size:11px}.stat strong{display:block;font:28px Georgia,serif;margin-top:6px}.bar-row{display:grid;grid-template-columns:75px 1fr 28px;gap:10px;align-items:center;margin:13px 0;font-size:12px}.bar{height:9px;background:#f0ece6;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:#b9aaa0;border-radius:10px}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.calendar-head button{border:1px solid var(--line);background:white;border-radius:50%;width:34px;height:34px;color:var(--accent)}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.weekday{text-align:center;color:var(--muted);font-size:11px;padding:6px}.day{min-height:75px;border:1px solid var(--line);border-radius:11px;background:#fffefa;padding:8px;text-align:left;color:var(--ink)}.day.muted{opacity:.35}.day.today{border-color:var(--accent)}.day .num{font-size:11px}.day .emo{display:block;font-size:20px;margin-top:5px}.empty{text-align:center;color:var(--muted);font-size:13px;padding:25px}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);gap:15px}.settings-row:last-child{border:0}.settings-row p{font-size:12px;color:var(--muted);margin:3px 0 0}
+footer{text-align:center;color:#a49b91;font-size:11px;margin-top:50px;letter-spacing:1px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#383632;color:white;padding:11px 18px;border-radius:30px;font-size:12px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1}
+@media(max-width:760px){.shell{padding:18px 15px 45px}header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.moods{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:1fr 1fr}.day{min-height:58px;padding:5px}.day .emo{font-size:16px}.entry-date{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="brand">MOOD DIARY<small>EVERY MOOD MATTERS.</small></div>
+  <nav>
+    <button class="active" data-page="home">首頁 HOME</button>
+    <button data-page="diary">日記回顧 DIARY</button>
+    <button data-page="calendar">心情日曆 CALENDAR</button>
+    <button data-page="insights">心情統計 INSIGHTS</button>
+    <button data-page="settings">設定 SETTINGS</button>
+  </nav>
+</header>
+<main>
+<section class="page active" id="home">
+  <div class="date-line" id="todayDate"></div>
+  <div class="eyebrow">YOUR PERSONAL SPACE</div>
+  <h1>Hello, <span id="helloName">there</span>.</h1>
+  <p class="subtitle">今天也留一點時間給自己。How are you feeling today?</p>
+  <div class="grid">
+    <div class="card">
+      <h2>Today's Mood</h2><p class="hint">選擇最接近你現在感受的心情</p>
+      <div class="moods" id="moods"></div>
+      <label for="diaryText">今日日記 / YOUR THOUGHTS</label>
+      <textarea id="diaryText" placeholder="今天發生了什麼事？有什麼想記錄的？"></textarea>
+      <label for="intensity">心情強度 / MOOD INTENSITY</label>
+      <div class="range-row"><input id="intensity" type="range" min="1" max="5" value="3"><span class="range-value" id="intensityValue">3 / 5</span></div>
+      <div class="actions"><button class="primary" id="saveBtn">Save Today's Diary</button><button class="secondary" id="clearBtn">清空</button></div>
+    </div>
+    <aside class="quote"><div><div class="eyebrow">A LITTLE REMINDER</div><blockquote>“You don't have to be positive all the time. It's okay to feel what you feel.”</blockquote></div><p>每一種情緒都有存在的理由。謝謝你，願意照顧自己的感受。</p></aside>
+  </div>
+  <div class="section-title"><h2>Recent Memories</h2><p>最近的心情紀錄</p></div>
+  <div class="entry-list" id="recentList"></div>
+</section>
+<section class="page" id="diary">
+  <div class="eyebrow">YOUR JOURNAL</div><h1>My Diary.</h1><p class="subtitle">把走過的日子，收藏成自己的故事。</p>
+  <div class="card"><div class="section-title" style="margin:0 0 15px"><h2>All Entries</h2><input id="searchDate" type="date" style="max-width:180px"></div><div class="entry-list" id="allList"></div></div>
+</section>
+<section class="page" id="calendar">
+  <div class="eyebrow">A MONTH IN FEELINGS</div><h1>Mood Calendar.</h1><p class="subtitle">回頭看看，這個月的自己經歷了什麼。</p>
+  <div class="card"><div class="calendar-head"><button id="prevMonth">‹</button><h2 id="monthLabel" style="font:24px Georgia,serif"></h2><button id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><p class="hint" style="margin:15px 0 0">點擊有心情符號的日期，即可查看當天日記。</p></div>
+</section>
+<section class="page" id="insights">
+  <div class="eyebrow">UNDERSTAND YOURSELF</div><h1>Mood Insights.</h1><p class="subtitle">數字不定義你，只是陪你更了解自己的感受。</p>
+  <div class="stats"><div class="stat"><small>紀錄總天數</small><strong id="totalDays">0</strong></div><div class="stat"><small>最常出現的心情</small><strong id="topMood">—</strong></div><div class="stat"><small>平均心情強度</small><strong id="avgIntensity">—</strong></div></div>
+  <div class="card"><h2>Mood Distribution</h2><p class="hint">所有日記中的心情分布</p><div id="moodBars"></div></div>
+</section>
+<section class="page" id="settings">
+  <div class="eyebrow">MAKE IT YOURS</div><h1>Settings.</h1><p class="subtitle">打造屬於自己的小小空間。</p>
+  <div class="card">
+    <div class="settings-row"><div><strong>你的暱稱</strong><p>讓首頁用你喜歡的名字向你問好。</p></div><input id="nickname" type="text" placeholder="輸入暱稱" style="max-width:220px"></div>
+    <div class="settings-row"><div><strong>匯出日記</strong><p>將紀錄下載為 JSON 檔案備份。</p></div><button class="secondary" id="exportBtn">匯出資料</button></div>
+    <div class="settings-row"><div><strong>清除所有日記</strong><p>此操作無法復原，建議先匯出備份。</p></div><button class="secondary" id="deleteAllBtn">清除資料</button></div>
+    <p class="hint" style="margin:18px 0 0">隱私提醒：目前資料只儲存在這個瀏覽器中，不會上傳到伺服器。請勿在共用電腦記錄敏感資訊。</p>
+  </div>
+</section>
+</main>
+<footer>MOOD DIARY · EVERY MOOD MATTERS · MADE WITH CARE</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const MOODS=[
+ {id:'happy',name:'開心',emoji:'😊',color:'#e8d7a9'},
+ {id:'calm',name:'平靜',emoji:'😌',color:'#c9d8c5'},
+ {id:'love',name:'幸福',emoji:'🥰',color:'#e8c9c2'},
+ {id:'sad',name:'低落',emoji:'😔',color:'#c9d2df'},
+ {id:'anxious',name:'焦慮',emoji:'😣',color:'#d8c9df'},
+ {id:'angry',name:'憤怒',emoji:'😠',color:'#dfb9ad'}
+];
+const KEY='moodDiaryEntries_v1', NAMEKEY='moodDiaryNickname';
+let entries=loadEntries(),selectedMood=null,calendarDate=new Date(),editingDate=null;
+function loadEntries(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(entries))}
+function today(){return dateKey(new Date())}
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function mood(id){return MOODS.find(m=>m.id===id)||MOODS[0]}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function formatDate(s){const d=new Date(s+'T00:00:00');return d.toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'short'})}
+function init(){
+ document.getElementById('todayDate').textContent=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'long',weekday:'long'});
+ document.getElementById('nickname').value=localStorage.getItem(NAMEKEY)||'';
+ document.getElementById('helloName').textContent=localStorage.getItem(NAMEKEY)||'there';
+ document.getElementById('moods').innerHTML=MOODS.map(m=>`<button class="mood" data-mood="${m.id}"><span>${m.emoji}</span><b>${m.name}</b></button>`).join('');
+ document.querySelectorAll('.mood').forEach(b=>b.onclick=()=>selectMood(b.dataset.mood));
+ document.getElementById('intensity').oninput=e=>document.getElementById('intensityValue').textContent=e.target.value+' / 5';
+ document.getElementById('saveBtn').onclick=saveEntry;
+ document.getElementById('clearBtn').onclick=()=>{selectedMood=null;editingDate=null;document.getElementById('diaryText').value='';document.querySelectorAll('.mood').forEach(x=>x.classList.remove('selected'));showToast('已清空輸入內容')};
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+ document.getElementById('prevMonth').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()-1);renderCalendar()};
+ document.getElementById('nextMonth').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()+1);renderCalendar()};
+ document.getElementById('searchDate').onchange=renderAll;
+ document.getElementById('nickname').onchange=e=>{localStorage.setItem(NAMEKEY,e.target.value.trim());document.getElementById('helloName').textContent=e.target.value.trim()||'there';showToast('暱稱已更新')};
+ document.getElementById('exportBtn').onclick=exportData;
+ document.getElementById('deleteAllBtn').onclick=()=>{if(confirm('確定要刪除所有日記嗎？這個動作無法復原。')){entries=[];saveData();renderAllViews();showToast('所有日記已清除')}};
+ const existing=entries.find(x=>x.date===today());if(existing){selectMood(existing.mood);document.getElementById('diaryText').value=existing.text;document.getElementById('intensity').value=existing.intensity;document.getElementById('intensityValue').textContent=existing.intensity+' / 5'}
+ renderAllViews();
+}
+function selectMood(id){selectedMood=id;document.querySelectorAll('.mood').forEach(b=>b.classList.toggle('selected',b.dataset.mood===id))}
+function saveEntry(){
+ if(!selectedMood){showToast('請先選擇今天的心情');return}
+ const date=editingDate||today(),text=document.getElementById('diaryText').value.trim(),intensity=Number(document.getElementById('intensity').value);
+ const item={date,mood:selectedMood,text,intensity};
+ const idx=entries.findIndex(x=>x.date===date);if(idx>=0)entries[idx]=item;else entries.push(item);
+ entries.sort((a,b)=>b.date.localeCompare(a.date));saveData();editingDate=null;renderAllViews();showToast('今天的心情已好好收藏');
+}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='calendar')renderCalendar();if(id==='insights')renderInsights();if(id==='diary')renderAll()}
+function entryHTML(e){const m=mood(e.mood);return `<div class="entry"><div class="entry-emoji">${m.emoji}</div><div class="entry-body"><strong>${formatDate(e.date)} · ${m.name}</strong><p>${escapeHTML(e.text||'（沒有留下文字，只有一份心情紀錄）')}</p></div><span class="entry-date">${e.intensity}/5</span><div class="entry-actions"><button data-edit="${e.date}">編輯</button><button data-delete="${e.date}">刪除</button></div></div>`}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bindEntryActions(root){root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));root.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{if(confirm('確定刪除這篇日記嗎？')){entries=entries.filter(x=>x.date!==b.dataset.delete);saveData();renderAllViews();showToast('日記已刪除')}})}
+function renderRecent(){const root=document.getElementById('recentList'),list=entries.slice(0,3);root.innerHTML=list.length?list.map(entryHTML).join(''):'<div class="empty">還沒有日記紀錄，今天就從一份心情開始吧。</div>';bindEntryActions(root)}
+function renderAll(){const root=document.getElementById('allList'),filter=document.getElementById('searchDate').value,list=entries.filter(e=>!filter||e.date===filter);root.innerHTML=list.length?list.map(entryHTML).join(''):'<div class="empty">找不到日記紀錄。</div>';bindEntryActions(root)}
+function editEntry(date){const e=entries.find(x=>x.date===date);if(!e)return;editingDate=date;showPage('home');selectMood(e.mood);document.getElementById('diaryText').value=e.text;document.getElementById('intensity').value=e.intensity;document.getElementById('intensityValue').textContent=e.intensity+' / 5';document.getElementById('saveBtn').textContent='更新這篇日記';showToast('已載入日記，編輯後請儲存');}
+function renderCalendar(){
+ const y=calendarDate.getFullYear(),m=calendarDate.getMonth();document.getElementById('monthLabel').textContent=`${y} 年 ${m+1} 月`;
+ const first=new Date(y,m,1),start=first.getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate();
+ const cells=[];for(let i=0;i<42;i++){let n,dt,muted=false;if(i<start){n=prevDays-start+i+1;dt=new Date(y,m-1,n);muted=true}else if(i>=start+days){n=i-start-days+1;dt=new Date(y,m+1,n);muted=true}else{n=i-start+1;dt=new Date(y,m,n)}
+ const key=dateKey(dt),e=entries.find(x=>x.date===key),isToday=key===today();cells.push(`<button class="day ${muted?'muted':''} ${isToday?'today':''}" data-day="${key}"><span class="num">${n}</span>${e?`<span class="emo">${mood(e.mood).emoji}</span>`:''}</button>`)}
+ document.getElementById('calendarGrid').innerHTML=['日','一','二','三','四','五','六'].map(x=>`<div class="weekday">${x}</div>`).join('')+cells.join('');
+ document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{const e=entries.find(x=>x.date===b.dataset.day);if(e){alert(`${formatDate(e.date)}\n心情：${mood(e.mood).name}\n強度：${e.intensity}/5\n\n${e.text||'沒有文字紀錄'}`)}else showToast('這一天還沒有心情紀錄')});
+}
+function renderInsights(){
+ document.getElementById('totalDays').textContent=entries.length;
+ const counts=MOODS.map(m=>({...m,count:entries.filter(e=>e.mood===m.id).length})),top=[...counts].sort((a,b)=>b.count-a.count)[0];
+ document.getElementById('topMood').textContent=entries.length?top.emoji+' '+top.name:'—';
+ document.getElementById('avgIntensity').textContent=entries.length?(entries.reduce((s,e)=>s+e.intensity,0)/entries.length).toFixed(1)+'/5':'—';
+ const max=Math.max(1,...counts.map(x=>x.count));document.getElementById('moodBars').innerHTML=counts.map(m=>`<div class="bar-row"><span>${m.emoji} ${m.name}</span><div class="bar"><i style="width:${m.count/max*100}%"></i></div><span>${m.count}</span></div>`).join('');
+}
+function renderAllViews(){renderRecent();renderAll();renderCalendar();renderInsights()}
+function exportData(){const blob=new Blob([JSON.stringify({nickname:localStorage.getItem(NAMEKEY)||'',entries},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mood-diary-backup.json';a.click();URL.revokeObjectURL(url);showToast('備份檔已下載')}
+init();
+</script>
+</body>
+</html>
